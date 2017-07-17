@@ -1,10 +1,19 @@
 from stack import Stack
 
 class Calculator:
-    def __init__(self, org_exp):
+    def __init__(self):
+        self.org_exp = None
+        self.postfix_exp = None
+        self.result = None
+
+    def set_org_exp(self, org_exp):
         self.org_exp = org_exp.replace(' ', '')
         self.postfix_exp = None
+        self.result = None
 
+    def get_org_exp(self):
+        return self.org_exp
+    
     def get_weight(self, oprt):
         if oprt == '*' or oprt == '/':
             return 9
@@ -25,7 +34,7 @@ class Calculator:
             #연산자라면
             else:
                 #'(' or 연산자 스택이 비었다면
-                if ch == '(' or oprt_stack.is_empty():
+                if ch == '(' or oprt_stack.empty():
                     oprt_stack.push(ch)
                 #')'
                 elif ch == ')':
@@ -75,14 +84,25 @@ class Calculator:
                 oprd1 = oprd_stack.pop()
                 oprd_stack.push(self.calc_two_oprd(
                     oprd1, oprd2, ch))
-        return oprd_stack.pop()
+        self.result = oprd_stack.pop()
+
+    def get_result(self):
+        if not self.result:
+            self.calculate()
+            
+        return self.result
 
 if __name__ == "__main__":
-    a = input("수식을 입력하세요 : ")
-    calc = Calculator(a)
-    print(calc.get_postfix_exp())
-    print("{exp} = {result}".format(
-        exp = calc.org_exp, result = calc.calculate()))
+    calc = Calculator()
+    while 1:
+        exp = input("수식을 입력하세요(종료 : 0) : ")
+        if exp == '0':
+            break
+        
+        calc.set_org_exp(exp)
+        print(calc.get_postfix_exp())
+        print("{exp} = {result}".format(
+            exp = calc.get_org_exp(), result = calc.get_result()))
                 
 
     
