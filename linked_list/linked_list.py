@@ -3,6 +3,9 @@ class Node:
         self.data = data
         self.next = None
 
+    def __del__(self):
+        print("data of {} is deleted".format(self.data))
+
 class Linked_list:
     def __init__(self):
         self.head = None
@@ -35,40 +38,44 @@ class Linked_list:
             self.num_data += 1
 
     def traverse(self, mode = 'next'):
-        if mode == 'first':#1
-            if self.empty():#2
-                return None
-            else:#3
-                self.before = self.head
-                self.current = self.head
-        else:#4
-            if self.current.next == None:#5
+        if self.empty():#1
+            return None
+        
+        if mode == 'first':#2
+            self.before = self.head
+            self.current = self.head
+        else:#3
+            if self.current.next == None:#4
                 return None
 
-            self.before = self.current#6
+            self.before = self.current#5
             self.current = self.current.next
 
-        return self.current.data#7
+        return self.current.data#6
 
     def remove(self):
         ret_data = self.current.data#1
-        self.num_data -= 1
-            
+        
+        #1. 데이터가 하나일 때     
         if self.size() == 1:#2
             self.head = None
             self.tail = None
             self.before = None
             self.current = None
+        #2. current == head
         elif self.current is self.head:#3
             self.head = self.head.next
             self.before = self.before.next
             self.current = self.current.next
         else:
+            #current == tail
             if self.current is self.tail:#4
                 self.tail = self.before
+            #일반적인 경우 
             self.before.next = self.current.next#5
             self.current = self.before
-
+            
+        self.num_data -= 1
         return ret_data#6
 
 def show_list(slist):
@@ -90,6 +97,7 @@ if __name__ == "__main__":
     print("\n")
 
     slist.append(2)#2
+    
     slist.append(3)
     slist.append(1)
     slist.append(5)
@@ -97,11 +105,13 @@ if __name__ == "__main__":
     slist.append(10)
     slist.append(7)
     slist.append(2)
-
+    
+    
     print("데이터의 개수 : {}".format(slist.size()))
     show_list(slist)
     print("\n")
-
+    
+    
     data = slist.traverse('first')#3
     while data:        
         if data == 2:
@@ -116,7 +126,6 @@ if __name__ == "__main__":
 
     print("데이터의 개수 : {}".format(slist.size()))
     show_list(slist)
-    
 
     
    
